@@ -1,17 +1,20 @@
-package agarthenoasis.scene.battle.quest;
+package agarthenoasis.scene.home;
 
 import agarthenoasis.scene.GameScene;
 import agarthenoasis.scene.SceneListener;
 
-public class QuestScene extends GameScene {
+public class SceneHome extends GameScene {
 
-    public QuestScene(final SceneListener listener) {
+
+    public SceneHome(final SceneListener listener) {
         super(listener);
     }
 
     @Override
     public void initialize() {
+        //final Group group = new Group();
 
+        //this.addActor(new BackHomeButton(group, this.listener));
     }
 
     @Override
@@ -20,7 +23,7 @@ public class QuestScene extends GameScene {
     }
 
     @Override
-    public void update(final float deltaTime) {
+    public void update(float deltaTime) {
 
     }
 

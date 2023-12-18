@@ -3,12 +3,9 @@ package agarthenoasis;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import agarthenoasis.scene.SceneChanger;
-import agarthenoasis.scene.SceneListener;
 import agarthenoasis.scene.SceneType;
 
 public class AgarthenOasis extends ApplicationAdapter implements InputProcessor {
@@ -19,7 +16,7 @@ public class AgarthenOasis extends ApplicationAdapter implements InputProcessor 
     public void create() {
         Gdx.input.setInputProcessor(this);
         this.sceneChanger = new SceneChanger();
-        this.sceneChanger.changeScene(SceneType.EditQuestPartySelection, false);
+        this.sceneChanger.changeScene(SceneType.QuestBattle, false);
         this.elapsedTime = 0.0f;
     }
 
@@ -27,7 +24,7 @@ public class AgarthenOasis extends ApplicationAdapter implements InputProcessor 
     public void render() {
         final float deltaTime = Gdx.graphics.getDeltaTime();
         this.elapsedTime += deltaTime;
-        ScreenUtils.clear(0.4f, 0.4f, 0.8f, 1.0f);
+        ScreenUtils.clear(0.25f, 0.25f, 0.25f, 1.0f);
 
         this.sceneChanger.sceneUpdate(deltaTime);
         this.sceneChanger.sceneDraw();
@@ -62,7 +59,7 @@ public class AgarthenOasis extends ApplicationAdapter implements InputProcessor 
     public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
         // y座標は反転させる
         final int fixed_y = Gdx.graphics.getHeight() - screenY;
-        return this.sceneChanger.touchDown(screenX, fixed_y, pointer, button);
+        return false;
     }
 
     @Override

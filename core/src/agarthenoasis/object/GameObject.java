@@ -1,85 +1,29 @@
 package agarthenoasis.object;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
-public abstract class GameObject {
-    protected int posX;
-    protected int posY;
-    protected int scaleX;
-    protected int scaleY;
+public abstract class GameObject extends Actor implements GameObjectLifecycle {
 
-    public GameObject() {
-        this.posX = 0;
-        this.posY = 0;
-        this.scaleX = 100;
-        this.scaleY = 100;
-    }
-
-    public void update(final float elapsedTime) {
-
-    }
-
-    public abstract void draw();
-
-    public abstract void dispose();
-
-    public void setPosition(final int posX, final int posY) {
-        this.posX = posX;
-        this.posY = posY;
-    }
-
-    public void addPosition(final int posX, final int posY) {
-        this.posX += posX;
-        this.posY += posY;
-    }
-
-    public void setScale(final int scaleX, final int scaleY) {
-        this.scaleX = scaleX;
-        this.scaleY = scaleY;
-    }
-
-    public void addScale(final int scaleX, final int scaleY) {
-        this.scaleX += scaleX;
-        this.scaleY += scaleY;
-    }
+    final protected Group group;
 
     /**
-     * このオブジェクトに対してタッチされたかをBooleanで返す
-     *
-     * @param posX タッチしたX座標
-     * @param posY タッチしたY座標
-     * @return オブジェクトに触れた場合はtrueを返す。それ以外はfalseを返す。
+     * @param sceneGroup 子オブジェクトを格納するためのグループ。シーンから渡される。
      */
-    public boolean canTouch(final int posX, final int posY) {
-        final int minPosX = this.posX;
-        final int minPosY = this.posY;
-        final int maxPosX = this.posX + this.scaleX;
-        final int maxPosY = this.posY + this.scaleY;
-
-        // Gdx.app.log("Touch", "posX: " + posX + " posY: " + posY + " minX: " + minPosX + " minY: " + minPosY + " maxX: " + maxPosX + " maxY: " + maxPosY);
-        // 範囲内か判定
-        if (minPosX > posX) {
-            return false;
-        }
-        if (minPosY > posY) {
-            return false;
-        }
-        if (maxPosX < posX) {
-            return false;
-        }
-        if (maxPosY < posY) {
-            return false;
-        }
-
-        return true;
+    public GameObject(final Group sceneGroup) {
+        this.group = new Group();
+        sceneGroup.addActor(this.group);
     }
 
-    public boolean onTouch(final int posX, final int posY) {
-        return false;
+    @Override
+    public void draw(final Batch batch, final float parentAlpha) {
+
     }
 
-    public boolean onDrag(final int posX, final int posY) {
-        return false;
+    @Override
+    public void update(final float deltaTime) {
+
     }
 
 }

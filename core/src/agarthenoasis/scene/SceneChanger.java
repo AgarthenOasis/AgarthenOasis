@@ -2,11 +2,11 @@ package agarthenoasis.scene;
 
 import java.util.Stack;
 
-import agarthenoasis.scene.edit.questpartyselection.QuestPartySelectScene;
-import agarthenoasis.scene.home.HomeScene;
+import agarthenoasis.scene.battle.quest.SceneQuestBattle;
+import agarthenoasis.scene.edit.questpartyselection.SceneQuestPartySelect;
+import agarthenoasis.scene.home.SceneHome;
 
 public class SceneChanger implements SceneListener {
-
     private Stack<GameScene> sceneStack;
 
     public SceneChanger() {
@@ -37,14 +37,18 @@ public class SceneChanger implements SceneListener {
         // シーンの切り替え(スタックに積む)
         switch (sceneType) {
             case Home:
-                this.sceneStack.push(new HomeScene(this));
+                this.sceneStack.push(new SceneHome(this));
                 break;
-            case EditQuestPartySelection:
-                this.sceneStack.push(new QuestPartySelectScene(this));
+            case QuestPartySelection:
+                this.sceneStack.push(new SceneQuestPartySelect(this));
                 break;
-            case EditArenaPartySelection:
-            case EditCharacterSelection:
-            case EditGuildBattlePartySelection:
+            case QuestBattle:
+                this.sceneStack.push(new SceneQuestBattle(this));
+                break;
+            case ArenaPartySelection:
+            case CharacterSelection:
+            case GuildBattlePartySelection:
+
             case Exit:
             default:
                 return;
@@ -73,7 +77,6 @@ public class SceneChanger implements SceneListener {
         }
     }
 
-    @Override
     public void sceneInitialize() {
         // シーンがそもそも存在しなければ何もしない
         if (this.sceneStack.isEmpty()) {
@@ -84,7 +87,6 @@ public class SceneChanger implements SceneListener {
         this.sceneStack.peek().start();
     }
 
-    @Override
     public void sceneUpdate(final float deltaTime) {
         // シーンがそもそも存在しなければ何もしない
         if (this.sceneStack.isEmpty()) {
@@ -94,7 +96,6 @@ public class SceneChanger implements SceneListener {
         this.sceneStack.peek().update(deltaTime);
     }
 
-    @Override
     public void sceneDraw() {
         // シーンがそもそも存在しなければ何もしない
         if (this.sceneStack.isEmpty()) {
@@ -104,7 +105,6 @@ public class SceneChanger implements SceneListener {
         this.sceneStack.peek().draw();
     }
 
-    @Override
     public void sceneDispose() {
         // シーンがそもそも存在しなければ何もしない
         if (this.sceneStack.isEmpty()) {
@@ -114,93 +114,4 @@ public class SceneChanger implements SceneListener {
         this.sceneStack.peek().dispose();
     }
 
-    @Override
-    public boolean keyDown(final int keycode) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().keyDown(keycode);
-    }
-
-    @Override
-    public boolean keyUp(final int keycode) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().keyUp(keycode);
-    }
-
-    @Override
-    public boolean keyTyped(final char character) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().keyTyped(character);
-    }
-
-    @Override
-    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().touchDown(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().touchUp(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchCancelled(final int screenX, final int screenY, final int pointer, final int button) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().touchCancelled(screenX, screenY, pointer, button);
-    }
-
-    @Override
-    public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().touchDragged(screenX, screenY, pointer);
-    }
-
-    @Override
-    public boolean mouseMoved(final int screenX, final int screenY) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().mouseMoved(screenX, screenY);
-    }
-
-    @Override
-    public boolean scrolled(final float amountX, final float amountY) {
-        // シーンがそもそも存在しなければ何もしない
-        if (this.sceneStack.isEmpty()) {
-            return false;
-        }
-
-        return this.sceneStack.peek().scrolled(amountX, amountY);
-    }
 }

@@ -1,26 +1,37 @@
 package agarthenoasis.object.character;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Group;
 
 import agarthenoasis.character.status.GameCharacterStatus;
+import agarthenoasis.motion.CharacterMotionContext;
 import agarthenoasis.object.GameObject;
-import jdk.internal.org.jline.utils.Status;
 
 public class GameCharacter extends GameObject {
+    private final SDAnimation sdAnimation;
+    private final GameCharacterStatus status;
+    private final CharacterMotionContext motionContext;
+    private final int id;
 
-    private final Texture sdImage; // SDイメージ
-    private final Texture laneImage; // レーンイメージ
-    private final GameCharacterStatus status;   // ステータス情報
-
-    public GameCharacter(final String sdPath, final String lanePath, final GameCharacterStatus status) {
-        this.sdImage = new Texture(sdPath);
-        this.laneImage = new Texture(lanePath);
-        this.status = status;
+    public GameCharacter(final Group group, final String sdPath, final String lanePath, final int characterID) {
+        super(group);
+        this.sdAnimation = new SDAnimation(group, sdPath, 1);
+        this.status = new GameCharacterStatus(characterID);
+        this.motionContext = new CharacterMotionContext();
+        this.id = characterID;
     }
 
     @Override
-    public void draw() {
+    public void update(final float deltaTime) {
+        // アニメーション更新
 
+        this.sdAnimation.update(deltaTime);
+        this.motionContext.inAction(deltaTime);
+    }
+
+    @Override
+    public void draw(final Batch batch, final float parentAlpha) {
+        this.sdAnimation.draw(batch, parentAlpha);
     }
 
     @Override

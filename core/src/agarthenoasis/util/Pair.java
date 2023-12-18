@@ -1,4 +1,4 @@
-package agarthenoasis;
+package agarthenoasis.util;
 
 public class Pair<T, U> {
     public final T first;
