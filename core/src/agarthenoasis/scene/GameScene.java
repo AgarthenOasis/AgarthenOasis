@@ -1,84 +1,105 @@
 package agarthenoasis.scene;
 
-import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.LinkedList;
 
-import agarthenoasis.object.GameObject;
+import agarthenoasis.object.GameObjectLifecycle;
 
-public abstract class GameScene implements InputProcessor {
+public abstract class GameScene implements Screen, ObjectRegistry {
     protected final SceneListener listener;
-    protected final LinkedList<GameObject> gameObjectList;
+    protected final OrthographicCamera camera;  // 平行投影用のカメラ
+    private final Stage stage;                  // カメラに追従しない(ワールド座標に置く)場合はこちらに追加する
+    private final Stage hudStage;               // カメラに追従するものはこちらに追加する
+
+    private final LinkedList<GameObjectLifecycle> objectList;
 
     public GameScene(final SceneListener listener) {
         this.listener = listener;
-        this.gameObjectList = new LinkedList<>();
+        this.stage = new Stage();
+        this.hudStage = new Stage(new ScreenViewport());
+        this.camera = new OrthographicCamera();
+        this.objectList = new LinkedList<>();
+
+        // カメラの設定
+        this.camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        this.camera.update();
+        Gdx.input.setInputProcessor(this.stage);
+        Gdx.input.setInputProcessor(this.hudStage);
     }
 
+    public void addActor(final Actor actor) {
+        this.stage.addActor(actor);
+    }
+
+    public void addHUDActor(final Actor actor) {
+        this.hudStage.addActor(actor);
+    }
+
+    /**
+     * 初期化が終わるまではシーンの切り替えは行われない
+     */
     public abstract void initialize();
 
     public abstract void start();
 
-    public abstract void update(final float deltaTime);
+    public void update(final float deltaTime) {
+        this.camera.update();
+        this.stage.act(deltaTime);
+        this.hudStage.act(deltaTime);
+    }
 
     public void draw() {
-        for (final GameObject object : this.gameObjectList) {
-            object.draw();
+        this.stage.draw();
+        this.hudStage.draw();
+    }
+
+    public void registerObject(final GameObjectLifecycle object) {
+        this.objectList.add(object);
+    }
+
+    @Override
+    public void dispose() {
+        for (final GameObjectLifecycle object : this.objectList) {
+            object.dispose();
         }
-    }
-
-    public abstract void dispose();
-
-    @Override
-    public boolean keyDown(final int keycode) {
-        return false;
+        this.stage.dispose();
+        this.hudStage.dispose();
     }
 
     @Override
-    public boolean keyUp(final int keycode) {
-        return false;
+    public void show() {
+
     }
 
     @Override
-    public boolean keyTyped(final char character) {
-        return false;
+    public void render(final float delta) {
+
     }
 
     @Override
-    public boolean touchDown(final int screenX, final int screenY, final int pointer, final int button) {
-        // 全オブジェクトに通知
-        for (final GameObject object : this.gameObjectList) {
-            if (object.canTouch(screenX, screenY)) {
-                object.onTouch(screenX, screenY);
-            }
-        }
+    public void resize(final int width, final int height) {
 
-        return true;
     }
 
     @Override
-    public boolean touchUp(final int screenX, final int screenY, final int pointer, final int button) {
-        return false;
+    public void pause() {
+
     }
 
     @Override
-    public boolean touchCancelled(final int screenX, final int screenY, final int pointer, final int button) {
-        return false;
+    public void resume() {
+
     }
 
     @Override
-    public boolean touchDragged(final int screenX, final int screenY, final int pointer) {
-        return false;
-    }
+    public void hide() {
 
-    @Override
-    public boolean mouseMoved(final int screenX, final int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(final float amountX, final float amountY) {
-        return false;
     }
 
 }
