@@ -24,16 +24,24 @@ public class ActiveLane {
         this.maxLaneIndex = 0;
     }
 
-    // レーンにキャラクターを追加できるかのチェック
+    /**
+     * キャラクターがアクティブレーンに追加できるかを返す
+     *
+     * @return キャラクターがアクティブレーンに追加できる場合はtrueを返す。それ以外はfalseを返す。
+     */
     public boolean canPushLane() {
         return this.activeLane.size() < this.MaxQueueSize;
     }
 
     public boolean isEmpty() {
-        return this.activeLane.isEmpty();
+        if (this.activeLane.isEmpty()) {
+            return true;
+        }
+
+        return !this.activeLane.peek().first.isPresent();
     }
 
-    public boolean push() {
+    public boolean pushToActiveLane() {
         // レーンに入る最大値の場合は追加しない
         if (this.activeLane.size() + 1 > this.MaxQueueSize) {
             return false;
@@ -43,7 +51,28 @@ public class ActiveLane {
         return true;
     }
 
-    public Pair<Optional<GameCharacter>, LanePanel> pop() {
+    public Pair<GameCharacter, LanePanel> popFromActiveLane() {
+        // キャラクターを取得してからキューから削除
+        final Pair<Optional<GameCharacter>, LanePanel> pair = this.activeLane.peek();
+        this.activeLane.pop();
+        --this.maxLaneIndex;
+        return new Pair(pair.first.get(), pair.second);
+    }
+
+    public boolean canUseSkill() {
+        return !this.skillQueue.isEmpty();
+    }
+
+    public boolean pushToSkillQueue() {
+        // レーンに入る最大値の場合は追加しない
+        if (this.activeLane.size() + 1 > this.MaxQueueSize) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public Pair<Optional<GameCharacter>, LanePanel> popFromSkillQueue() {
         // キャラクターを取得してからキューから削除
         final Pair<Optional<GameCharacter>, LanePanel> pair = this.activeLane.peek();
         this.activeLane.pop();
@@ -60,7 +89,6 @@ public class ActiveLane {
     }
 
     public void update() {
-
 
     }
 

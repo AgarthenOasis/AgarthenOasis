@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 
 import agarthenoasis.object.GameObject;
+import agarthenoasis.scene.ObjectRegistry;
 
 public class SDAnimation extends GameObject {
     private static final float next = 0.16f;
@@ -15,8 +16,8 @@ public class SDAnimation extends GameObject {
     private int animationCounter;
     private final int maxAnimationCounter;
 
-    public SDAnimation(final Group group, final String sdPath, final int maxAnimationCount) {
-        super(group);
+    public SDAnimation(final ObjectRegistry registry, final Group group, final String sdPath, final int maxAnimationCount) {
+        super(registry, group);
         this.spriteBatch = new SpriteBatch();
         this.sdImage = new TextureAtlas(sdPath);
 

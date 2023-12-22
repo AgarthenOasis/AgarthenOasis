@@ -5,9 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import java.util.Optional;
 import java.util.Random;
 
-import agarthenoasis.character.BaseBattleAction;
 import agarthenoasis.gamesystem.battle.field.BattleField;
 import agarthenoasis.gamesystem.battle.field.FieldGrid;
+import agarthenoasis.object.character.GameCharacter;
 
 public class BattleSystem {
     private final Random random;
@@ -23,35 +23,22 @@ public class BattleSystem {
     }
 
     public void initialize(final Group group) {
-
+        //this.battleField.setAllyCharacter(FieldGrid.Center,);
     }
 
     public void update(final float deltaTime) {
         // スケジューラ―の更新
         this.battleAttackScheduler.update(deltaTime);
         this.battleMotionScheduler.update(deltaTime);
-
-
-        /*
-        if (this.battleAttackScheduler.canAttack()) {
-            final Pair<Optional<GameCharacter>, LanePanel> pair = this.battleAttackScheduler.getAttackCharacterAndLaneType();
-            if (pair.first.isPresent()) {
-
-            }
-        }
-        * */
-
-        //this.battleField.getAllyAttackRange();
-
-        //BattleSystem.attack();
     }
 
     /**
      * 攻撃処理の順序などは全てここで決める
      */
-    private static void attack(final Optional<BaseBattleAction>[] field, final FieldGrid[] attackRange, final BaseBattleAction attacker) {
+    private static void attack(final Optional<GameCharacter>[] field, final FieldGrid[] attackRange, final GameCharacter attacker) {
+        /*
         // 攻撃者に攻撃通知
-        attacker.onAttacked();
+        attacker.startEvent(EventType.Attack);
 
         // 取得した要素を元に配列にアクセスし、キャラクターが存在した場合は攻撃を行う
         for (final FieldGrid fieldGrid : attackRange) {
@@ -79,6 +66,9 @@ public class BattleSystem {
                 enemy.onCounterattack();
             }
         }
+
+        attacker.endEvent(EventType.Attack);
+        * */
     }
 
     private static void speed() {
@@ -87,18 +77,6 @@ public class BattleSystem {
 
     public static float getDamageRandomPer() {
         return 1.03f;
-    }
-
-    public static int getDamage(final float attackerAttack, final float suffererDefense, final float randPer) {
-        final int constantDamage = (int) (250.0f * randPer);
-        final int result = (int) ((attackerAttack - suffererDefense / 3) * randPer);
-
-        // 防御力が高すぎる場合はマイナスになるので固定値を返す
-        if (result < 0) {
-            return constantDamage;
-        }
-
-        return result;
     }
 
     private static long getSeed() {

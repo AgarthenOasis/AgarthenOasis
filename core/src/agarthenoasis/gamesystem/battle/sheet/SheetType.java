@@ -1,5 +1,26 @@
 package agarthenoasis.gamesystem.battle.sheet;
 
+import agarthenoasis.gamesystem.battle.field.FieldGrid;
+
 public enum SheetType {
-    Aegis1, Wing1, Wing2, Crescent1, GeminiSword1, Stinger1, SpeedStar1, SpeedRise1, TidalWave1, TidalWave2, Titan1, Titan2, TwinGate1, DecoyMaster1, Dominion1, Dominion2, Dragoon1, NightForm1, NightForm2, PaladinGuard1, Bullfighter2, Pentagon1, Polaris1, Meteor1, Lapis1, Lapis2, RapidRaider1, RobinHood1,
+    Aegis1(new FieldGrid[]{FieldGrid.ForwardLeft, FieldGrid.MiddleLeft, FieldGrid.Center, FieldGrid.MiddleRight, FieldGrid.BehindRight}),
+    Wing1(new FieldGrid[]{}), Wing2(new FieldGrid[]{}), Crescent1(new FieldGrid[]{}), GeminiSword1(new FieldGrid[]{}), Stinger1(new FieldGrid[]{}),
+    SpeedStar1(new FieldGrid[]{}), SpeedRise1(new FieldGrid[]{}), TidalWave1(new FieldGrid[]{FieldGrid.ForwardMiddle, FieldGrid.MiddleRight,
+            FieldGrid.MiddleLeft, FieldGrid.BehindRight, FieldGrid.BehindLeft}), TidalWave2(new FieldGrid[]{FieldGrid.ForwardMiddle, FieldGrid.MiddleRight,
+            FieldGrid.MiddleLeft, FieldGrid.BehindRight, FieldGrid.BehindLeft}), Titan1(new FieldGrid[]{}), Titan2(new FieldGrid[]{}),
+    TwinGate1(new FieldGrid[]{}), DecoyMaster1(new FieldGrid[]{}), Dominion1(new FieldGrid[]{}), Dominion2(new FieldGrid[]{}), Dragoon1(new FieldGrid[]{}),
+    NightForm1(new FieldGrid[]{}), NightForm2(new FieldGrid[]{}), PaladinGuard1(new FieldGrid[]{}), Bullfighter2(new FieldGrid[]{}),
+    Pentagon1(new FieldGrid[]{}), Polaris1(new FieldGrid[]{}), Meteor1(new FieldGrid[]{}), Lapis1(new FieldGrid[]{}), Lapis2(new FieldGrid[]{}),
+    RapidRaider1(new FieldGrid[]{}), RobinHood1(new FieldGrid[]{});
+
+    private final FieldGrid[] fieldGrids;
+
+    SheetType(final FieldGrid[] fieldGrids) {
+        this.fieldGrids = fieldGrids;
+    }
+
+    public FieldGrid[] getFieldGrids() {
+        return this.fieldGrids;
+    }
+
 }

@@ -3,6 +3,7 @@ package agarthenoasis;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import agarthenoasis.scene.SceneChanger;
@@ -25,6 +26,11 @@ public class AgarthenOasis extends ApplicationAdapter implements InputProcessor 
         final float deltaTime = Gdx.graphics.getDeltaTime();
         this.elapsedTime += deltaTime;
         ScreenUtils.clear(0.25f, 0.25f, 0.25f, 1.0f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        // アルファブレンディングを有効にする
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         this.sceneChanger.sceneUpdate(deltaTime);
         this.sceneChanger.sceneDraw();
