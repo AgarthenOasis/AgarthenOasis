@@ -44,7 +44,7 @@ public class GameCharacter extends GameObjectAffectedByCamera implements EventTr
         this.status = new CharacterStatus(characterID);
         this.motionContext = new CharacterMotionContext();
         this.state = BattleState.Idle;
-        this.sheetEffect = new SheetEffect(fieldGrid, this.status.attribute) {
+        this.sheetEffect = new SheetEffect(SheetType.Aegis1) {
         };
     }
 

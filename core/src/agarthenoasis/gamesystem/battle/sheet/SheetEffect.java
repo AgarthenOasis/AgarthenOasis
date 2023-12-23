@@ -5,31 +5,29 @@ import agarthenoasis.gamesystem.battle.status.CharacterAttribute;
 
 public abstract class SheetEffect {
 
-    protected final FieldGrid fieldGrid;
-    protected final CharacterAttribute attribute;
+    protected final SheetType sheetType;
 
-    public SheetEffect(final FieldGrid fieldGrid, final CharacterAttribute attribute) {
-        this.fieldGrid = fieldGrid;
-        this.attribute = attribute;
+    public SheetEffect(final SheetType sheetType) {
+        this.sheetType = sheetType;
     }
 
-    float getEffectOfAttack() {
+    float getEffectOfAttack(final CharacterAttribute attribute, final FieldGrid fieldGrid) {
         return 1;
     }
 
-    float getEffectOfDefence() {
+    float getEffectOfDefence(final CharacterAttribute attribute, final FieldGrid fieldGrid) {
         return 1;
     }
 
-    int getEffectOfSpeed() {
+    int getEffectOfSpeed(final CharacterAttribute attribute, final FieldGrid fieldGrid) {
         return 0;
     }
 
-    float getEffectOfSkillProbability() {
+    float getEffectOfSkillProbability(final CharacterAttribute attribute, final FieldGrid fieldGrid) {
         return 1;
     }
 
-    float getEffectOfCastleBreak() {
+    float getEffectOfCastleBreak(final CharacterAttribute attribute, final FieldGrid fieldGrid) {
         return 0;
     }
 }

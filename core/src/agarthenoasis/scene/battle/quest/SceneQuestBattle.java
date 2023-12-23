@@ -30,7 +30,7 @@ public class SceneQuestBattle extends GameScene {
     public void initialize() {
         final Group group = new Group();
         final Group hudGroup = new Group();
-        this.battleSystem.initialize(group);
+        //this.battleSystem.initialize(group);
 
         group.addActor(new ObjectBattleFieldGrid(this, group, this.camera));    // グリッド
 
