@@ -37,7 +37,7 @@ public class DisplayCharacterFace extends GameObject {
 
         final float scaleX = UISizeSetting.ClippedBattleCharacters.x;
         final float scaleY = UISizeSetting.ClippedBattleCharacters.y;
-        this.mesh = this.createMesh(startX, startY, scaleX, scaleY, 0.4f, 0.2f, 1.0f);
+        this.mesh = this.createMesh(startX, startY, scaleX, scaleY, 0.15f, 0.5f, 3.0f);
 
         this.projectionMatrix = new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -68,36 +68,34 @@ public class DisplayCharacterFace extends GameObject {
      */
     private Mesh createMesh(final float startX, final float startY, final float scaleX, final float scaleY, final float startU, final float startV,
                             final float adjustmentTextureScale) {
-        final float divX = 5.0f;
-        final float divY = 2.0f;
+        final float divX = 5.0f;    // 値が大きいほど左に寄る
+        final float divY = 2.0f;    // 値が大きいほど下に寄る
 
         // 各頂点の座標を決める
         final float bottomLeftOffset = UISizeSetting.ParallelogramVertexShiftForBackground;
+        final float lengthMiddleX = scaleX / divX;
+        final float lengthMiddleY = scaleY / divY;
         final Vector2 bottomLeft = new Vector2(startX + bottomLeftOffset, startY);
         final Vector2 bottomRight = new Vector2(startX + scaleX, startY);
-        final Vector2 middleLeft = new Vector2(startX, startY + scaleY / divY);
-        final Vector2 topLeft = new Vector2(startX + scaleX / divX, startY + scaleY);
         final Vector2 topRight = new Vector2(startX + scaleX, startY + scaleY);
+        final Vector2 topLeft = new Vector2(startX + lengthMiddleX, startY + scaleY);
+        final Vector2 middleLeft = new Vector2(startX, startY + lengthMiddleY);
 
-        // 各頂点に対するUV座標を求める(テクスチャ比率を保持)
-        // 各頂点のUV座標はテクスチャ縦横との差分から求める
-        // C++のoperator/が欲しかった(あんまり使わないけど)
-        // テクスチャのUV座標に合わせてもともとの頂点座標を正規化する
-        final float textureWidth = this.texture.getWidth() * adjustmentTextureScale;
-        final float textureHeight = this.texture.getHeight() * adjustmentTextureScale;
-
-        final Vector2 bottomLeftUV = this.getUV(bottomLeft, startX, startY, startU, startV, textureWidth, textureHeight);
-        final Vector2 bottomRightUV = this.getUV(bottomRight, startX, startY, startU, startV, textureWidth, textureHeight);
-        final Vector2 middleLeftUV = this.getUV(middleLeft, startX, startY, startU, startV, textureWidth, textureHeight);
-        final Vector2 topLeftUV = this.getUV(topLeft, startX, startY, startU, startV, textureWidth, textureHeight);
-        final Vector2 topRightUV = this.getUV(topRight, startX, startY, startU, startV, textureWidth, textureHeight);
+        // ポリゴンのサイズに関わらす指定の大きさの画像を切り抜いた表示にするため各頂点に対するUV座標を求める(テクスチャ比率を保持)
+        // 各頂点のUV座標は画面からの相対位置から取得する
+        // C++のoperatorが欲しかった(あんまり使わないけど)
+        final Vector2 bottomLeftUV = this.getUV(bottomLeft, startX, startY, startU, startV, adjustmentTextureScale);
+        final Vector2 bottomRightUV = this.getUV(bottomRight, startX, startY, startU, startV, adjustmentTextureScale);
+        final Vector2 topRightUV = this.getUV(topRight, startX, startY, startU, startV, adjustmentTextureScale);
+        final Vector2 topLeftUV = this.getUV(topLeft, startX, startY, startU, startV, adjustmentTextureScale);
+        final Vector2 middleLeftUV = this.getUV(middleLeft, startX, startY, startU, startV, adjustmentTextureScale);
 
         final float[] vertices = new float[]{               // 五角形(左上が斜めになっている四角形)頂点生成
                 bottomLeft.x, bottomLeft.y, bottomLeftUV.x, bottomLeftUV.y,         // 左下
                 bottomRight.x, bottomRight.y, bottomRightUV.x, bottomRightUV.y,     // 右下
-                topRight.x, topRight.y, middleLeftUV.x, middleLeftUV.y,             // 右上
+                topRight.x, topRight.y, topRightUV.x, topRightUV.y,                 // 右上
                 topLeft.x, topLeft.y, topLeftUV.x, topLeftUV.y,                     // 中上
-                middleLeft.x, middleLeft.y, topRightUV.x, topRightUV.y              // 左中
+                middleLeft.x, middleLeft.y, middleLeftUV.x, middleLeftUV.y          // 左中
         };
 
         final short[] indices = new short[]{  // 三角形のインデックスを設定 (五角形を構成する三角形)
@@ -117,19 +115,17 @@ public class DisplayCharacterFace extends GameObject {
     }
 
     private static Vector2 getUV(final Vector2 vertexPos, final float startX, final float startY, final float startU, final float startV,
-                                 final float textureWidth, final float textureHeight) {
+                                 final float adjustmentTextureScale) {
         // 頂点座標の平行移動成分が含まれるので引いて頂点の形だけを抽出
         final float screenWidth = Gdx.graphics.getWidth();
         final float screenHeight = Gdx.graphics.getHeight();
-        final float posX = (vertexPos.x - startX) / screenWidth;
-        final float posY = (vertexPos.y - startY) / screenHeight;
-
-        final float normalizeTextureWidthPer = textureWidth / screenWidth;
-        final float normalizeTextureHeightPer = textureHeight / screenHeight;
+        final float posX = (vertexPos.x - startX) / screenWidth * adjustmentTextureScale;
+        final float posY = (vertexPos.y - startY) / screenHeight * adjustmentTextureScale;
 
         // UV座標用の平行移動成分を足す
-        final float u = posX / textureWidth + startU;
-        final float v = posY / textureHeight + startV;
+        final float u = posX + startU;
+        final float v = -posY + startV; // Vだけは反転させる
+
         return new Vector2(u, v);
     }
 }
